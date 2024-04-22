@@ -1,0 +1,58 @@
+# depslib dependency file v1.0
+1713763846 source:c:\users\bondcroft\documents\prog c++\battle city\battle city\battlecity.cpp
+	<stdio.h>
+	<windows.h>
+	<conio.h>
+	<stdlib.h>
+	<list>
+	<time.h>
+	<vector>
+	<iostream>
+	"BattleCity.h"
+	"funciones.h"
+	"stages.h"
+
+1713788877 c:\users\bondcroft\documents\prog c++\battle city\battle city\battlecity.h
+	<iostream>
+	<vector>
+	<string>
+	"funciones.h"
+
+1713788723 source:c:\users\bondcroft\documents\prog c++\battle city\battle city\main.cpp
+	<iostream>
+	<stdio.h>
+	<windows.h>
+	<conio.h>
+	<stdlib.h>
+	<list>
+	<time.h>
+	"BattleCity.h"
+	"stages.h"
+	"funciones.h"
+
+1713241404 c:\users\bondcroft\documents\prog c++\battle city\battle city\stages.h
+
+1713482352 source:c:\users\bondcroft\documents\prog c++\battle city\battle city\stages.cpp
+	<iostream>
+	"stages.h"
+
+1713786353 source:c:\users\bondcroft\documents\prog c++\battle city\battle city\supertank.cpp
+	<string>
+	<windows.h>
+	"BattleCity.h"
+	"funciones.h"
+
+1712427736 c:\users\bondcroft\documents\prog c++\battle city\battle city\funciones.h
+	<windows.h>
+
+1712428228 source:c:\users\bondcroft\documents\prog c++\battle city\battle city\funciones.cpp
+	<stdio.h>
+	<windows.h>
+	<conio.h>
+	<stdlib.h>
+	<time.h>
+	<vector>
+	<iostream>
+	"funciones.h"
+	"stages.h"
+
