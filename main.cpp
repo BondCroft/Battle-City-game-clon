@@ -24,6 +24,8 @@ void pintarMatrizCaracteres(char (&matriz)[ROW][COLS], int color_n);
 
 bool colision(SuperTank* tank, Bala* bala);
 bool colisionEntreBalas(Bala* bala_A, Bala* bala_B);
+void moverEnemigos(list<ENEMY*> &enemigos, int cont);
+
 
 //funcion principal.
 int main(){
@@ -70,18 +72,14 @@ int main(){
 
         T.mover();
 
-        //muestro y muevo cada objeto de la lista 'ENEMY'.
-		for(itE = E.begin(); itE != E.end(); itE++){
-            (*itE)->mover();
-			(*itE)->pintarConDireccion(7);
+        moverEnemigos(E, cont);
 
+        //itero lista enemy, disparo si contador es igual a 10, reinicio contador. y busco colision con objeto bala.
+		for(itE = E.begin(); itE != E.end(); itE++){
 			if(cont == 10){ //condicion para que disparen los objetos enemy.
                 B_enemy.push_back(new Bala((*itE)->X()+1, (*itE)->Y()+1, (*itE)->getDireccion()));
 			}
-			if(cont == 12){  //si llega a 20 cambio la direccion del objeto 'ENEMY'.
-                (*itE)->setDireccion((*itE)->direccionRadom('x'));
-                cont = 0;
-			}
+
             if(B.size() > 0){ //si hay al menos un objeto bala busca la colision con el objeto enemy
                 for(itB = B.begin(); itB != B.end(); ){
                     if(colision(*itE, *itB)){
@@ -111,10 +109,12 @@ int main(){
         for(itB = B.begin(); itB != B.end(); ){
             (*itB)-> mover();
 
-			if((*itB)->fuera() || stage_uno[(*itB)->X()][(*itB)->Y()] == 'H'){
-                if(stage_uno[(*itB)->X()][(*itB)->Y()] == 'H') stage_uno[(*itB)->X()][(*itB)->Y()] = '_';
+			if((*itB)->fuera()){
                 deleteBalas.push_back(*itB);
-                break;
+			}else
+                if(stage_uno[(*itB)->X()][(*itB)->Y()] == 'H'){
+                    stage_uno[(*itB)->X()][(*itB)->Y()] = '_';
+                    deleteBalas.push_back(*itB);
 			}else{
                 itB++;
 			}
@@ -137,7 +137,7 @@ int main(){
                 ++itB_enemy;
             }
         }
-
+        if(cont == 13) cont = 0;
 		//colicion entre objeto bala y objeto enemy
 
 
@@ -264,9 +264,18 @@ bool colisionEntreBalas(Bala* bala_A, Bala* bala_B){
     int AY = bala_A->Y();
     int BX = bala_B->X();
     int BY = bala_B->Y();
-
+    //modificar para que se de la colision en casilleros lindantes.
     if(BX == AX && BY == AY){
         return true;
     }
     return false;
 }
+
+void moverEnemigos(list<ENEMY*> &enemigos, int cont){
+    for(auto enemigo: enemigos){
+        enemigo->mover();
+        if(cont == 12)
+            enemigo->setDireccion(enemigo->direccionRadom('x'));
+    }
+}
+
