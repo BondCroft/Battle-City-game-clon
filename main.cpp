@@ -29,14 +29,12 @@ void colisionesTankesBalas(Tank &tankUser, list<ENEMY*> &tankEnemi, list<Bala*> 
 
 void moverEnemigos(list<ENEMY*> &enemigos, int cont);
 void balasMoverAndFuera(list<Bala*> &balas);
-
+void limpiarMemoria(list<Bala*> &balas, list<Bala*> &balasEnemigo);
 
 //funcion principal.
 int main(){
 	//declaro variables
 	int cont = 0;
-	vector<Bala*> deleteBalas; //vector de punteros a objetos bala de la lista B.
-	//vector<Bala*> deleteBalasEmy; //vector de punteros a objetos bala de la lista ENEMY.
 
 	srand(time(NULL));
 
@@ -45,7 +43,6 @@ int main(){
 
 	//creo un objeto TANK con coredenadas x, y(int), numero de vidas(int), direccion(char) y puntos(int).
 	Tank T(25, 26, 3, up, 0);
-    Tank* punteroATank = &T; //puntero a T utilizado para pasar como parametro a funcion colision().
 
 	//creo una lista del objeto 'ENEMY' y su iterador.
 	list<ENEMY*> E;
@@ -74,9 +71,9 @@ int main(){
 
 	while(!game_over){
 
-        T.mover();
+        T.mover();                 //mueve el objeto Tank
 
-        moverEnemigos(E, cont);   //Itera y mueve objetos enemy, recive cont (int) para modificar direccion de objetos enemy.
+        moverEnemigos(E, cont);   //Itera y mueve objetos enemy, recive lista E y cont (int) para modificar direccion de objetos enemy.
 
         //itero lista enemy, disparo si contador es igual a 10.
 		for(itE = E.begin(); itE != E.end(); itE++){
@@ -84,81 +81,52 @@ int main(){
                 B_enemy.push_back(new Bala((*itE)->X()+1, (*itE)->Y()+1, (*itE)->getDireccion()));
 			}
         }
-
+        //si disparar es true agrega un nuevo ojeto bala a la lista B y setea disparar en false.
         if(T.getDisparar()){
-            B.push_back(new Bala(T.X()+1, T.Y()+1, T.getDireccion() ));  //creo nuevo obj bala y le doy trayectoria
+            B.push_back(new Bala(T.X()+1, T.Y()+1, T.getDireccion() ));  //creo nuevo obj bala.
             T.setDisparar();  //metodo miembro que cambia disparar a false.
         }
 
-        balasMoverAndFuera(B);
-        balasMoverAndFuera(B_enemy);
+        balasMoverAndFuera(B);          //funcion que itera listas bala, mueve cada elemento de la lista
+        balasMoverAndFuera(B_enemy);    //Determina si estan fuera de la pantalla y los elimina.
 
-        colisionesTankesBalas(T, E, B, B_enemy);
+        colisionesTankesBalas(T, E, B, B_enemy);  //funcion que busca colisiones entre objetos bala, tank, y enemy
+                                                  //las coliciones pueden ser: bala bala_enemy, bala(user) enemy, bala_enemy Tank.
 
-        for(itB = B.begin(); itB != B.end(); ){
+        for(itB = B.begin(); itB != B.end(); ){     //itero y busco si objetos bala colisionan con elementos 'H' dentro de la matriz mapa 'satge_uno'.
 
             if(stage_uno[(*itB)->X()][(*itB)->Y()] == 'H'){
                 stage_uno[(*itB)->X()][(*itB)->Y()] = '_';
                 (*itB)->borrar();
                 delete *itB;
-                B.remove(*itB);
+                B.erase(itB);
                 break;
 
 			}else{
                 itB++;
 			}
 		}
+
         //reinicio contador
-        if(cont == 13) cont = 0;
-
-
-
-		//busco colision entre objetos bala
-		for(itB = B.begin(); itB != B.end(); ++itB){
-            for(itB_enemy = B_enemy.begin(); itB_enemy != B_enemy.end(); ++itB_enemy){
-                if(colisionEntreBalas(*itB, *itB_enemy)){
-
-                    deleteBalas.push_back(*itB);
-                    deleteBalas.push_back(*itB_enemy);
-                    break;
-                }
-            }
-        }
-
-        for (auto it = deleteBalas.begin(); it != deleteBalas.end(); ++it) {
-        // Buscar el puntero en la lista B y eliminar el objeto Bala correspondiente
-            for (auto itB = B.begin(); itB != B.end(); ++itB) {
-
-                if (*it == *itB) { // Comparar los punteros para encontrar coincidencias
-                    (*itB)->borrar();
-                    delete *itB; // Eliminar el objeto Bala de la lista B
-                    itB = B.erase(itB); // Eliminar el puntero de la lista B y actualizar el iterador
-                    break; // Salir del bucle interno
-                }
-            }
-            for (auto itB_enemy = B_enemy.begin(); itB_enemy != B_enemy.end(); ++itB_enemy){
-                //(*itB_enemy)->mover();
-                if(*it == *itB_enemy){
-                    (*itB_enemy)->borrar();
-                    delete *itB_enemy;
-                    itB_enemy = B_enemy.erase(itB_enemy);
-                    break;
-                }
-            }
-        }
-        deleteBalas.clear();
+      d  if(cont == 13) cont = 0;
 
         if(E.size() < 3) E.push_back(new ENEMY());
 		//incremento el contador q suma los movimientos de objetos 'ENEMY'.
 		cont++;
 
-		if(T.getVida() == 0){
+		if(T.getVida() == 0){    //condicion que termina el juego
             gotoxy(30, 30); printf("GAME OVER");
             game_over = true;
 		}
         T.pintar_corazones();
 		Sleep(50);
 	}
+
+    limpiarMemoria(B, B_enemy); //funcion que elimina los objetos de las listas bala.
+
+    pintarMatrizCaracteres(stage_uno, 5);
+
+
 	return 0;
 }
 
@@ -271,6 +239,18 @@ void colisionesTankesBalas(Tank &tankUser, list<ENEMY*> &tankesEnemi, list<Bala*
         }
     }
     //se puede buscar colision entre objetos bala pero falta mejorar la logica!
+    for(auto balaU: balasUser){
+        for(auto balaE: balasEnemi){
+            if(colisionEntreBalas(balaU, balaE)){
+                balaE->borrar();
+                balaU->borrar();
+                delete balaE;
+                delete balaU;
+                balasEnemi.remove(balaE);
+                balasUser.remove(balaU);
+            }
+        }
+    }
 }
 
 
@@ -294,3 +274,18 @@ void balasMoverAndFuera(list<Bala*> &balas){
     }
 }
 
+
+void limpiarMemoria(list<Bala*> &balas, list<Bala*> &balasEnemigo) {
+    // Limpia la memoria de las balas que ya no se necesitan
+    for(auto bala : balas) {
+        bala->borrar();
+        delete bala;
+    }
+    balas.clear();
+
+    for(auto balaEnemigo : balasEnemigo) {
+        balaEnemigo->borrar();
+        delete balaEnemigo;
+    }
+    balasEnemigo.clear();
+}
