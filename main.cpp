@@ -92,7 +92,7 @@ int main(){
 
         colisionesTankesBalas(T, E, B, B_enemy);  //funcion que busca colisiones entre objetos bala, tank, y enemy
                                                   //las coliciones pueden ser: bala bala_enemy, bala(user) enemy, bala_enemy Tank.
-
+        /*
         for(itB = B.begin(); itB != B.end(); ){     //itero y busco si objetos bala colisionan con elementos 'H' dentro de la matriz mapa 'satge_uno'.
 
             if(stage_uno[(*itB)->X()][(*itB)->Y()] == 'H'){
@@ -100,24 +100,25 @@ int main(){
                 (*itB)->borrar();
                 delete *itB;
                 B.erase(itB);
-                break;
+                //break;
 
 			}else{
-                itB++;
+                ++itB;
 			}
 		}
-
+        */
         //reinicio contador
-      d  if(cont == 13) cont = 0;
+        if(cont == 13) cont = 0;
 
         if(E.size() < 3) E.push_back(new ENEMY());
 		//incremento el contador q suma los movimientos de objetos 'ENEMY'.
 		cont++;
 
-		if(T.getVida() == 0){    //condicion que termina el juego
+		if(T.getVida() <= 0){    //condicion que termina el juego
             gotoxy(30, 30); printf("GAME OVER");
             game_over = true;
 		}
+		gotoxy(1, 1); cout << "soy lista bala: " << B.size();
         T.pintar_corazones();
 		Sleep(50);
 	}
@@ -266,7 +267,10 @@ void moverEnemigos(list<ENEMY*> &enemigos, int cont){
 void balasMoverAndFuera(list<Bala*> &balas){
     for(auto bala: balas){
         bala->mover();
-        if(bala->fuera()){
+        if(bala->fuera() || stage_uno[bala->Y()][bala->X()] == 'H'){
+            if(stage_uno[bala->Y()][bala->X()] == 'H'){
+                stage_uno[bala->Y()][bala->X()] = '_';
+            }
             bala->borrar();
             delete bala; // Eliminar el objeto Bala de la lista B
             balas.remove(bala);
