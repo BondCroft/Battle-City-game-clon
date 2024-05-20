@@ -77,9 +77,9 @@ int main(){
 
         //itero lista enemy, disparo si contador es igual a 10.
 		for(itE = E.begin(); itE != E.end(); itE++){
-			if(cont == 10){ //condicion para que disparen los objetos enemy.
+			/*if(cont == 10){ //condicion para que disparen los objetos enemy.
                 B_enemy.push_back(new Bala((*itE)->X()+1, (*itE)->Y()+1, (*itE)->getDireccion()));
-			}
+			}*/
         }
         //si disparar es true agrega un nuevo ojeto bala a la lista B y setea disparar en false.
         if(T.getDisparar()){
@@ -92,21 +92,7 @@ int main(){
 
         colisionesTankesBalas(T, E, B, B_enemy);  //funcion que busca colisiones entre objetos bala, tank, y enemy
                                                   //las coliciones pueden ser: bala bala_enemy, bala(user) enemy, bala_enemy Tank.
-        /*
-        for(itB = B.begin(); itB != B.end(); ){     //itero y busco si objetos bala colisionan con elementos 'H' dentro de la matriz mapa 'satge_uno'.
 
-            if(stage_uno[(*itB)->X()][(*itB)->Y()] == 'H'){
-                stage_uno[(*itB)->X()][(*itB)->Y()] = '_';
-                (*itB)->borrar();
-                delete *itB;
-                B.erase(itB);
-                //break;
-
-			}else{
-                ++itB;
-			}
-		}
-        */
         //reinicio contador
         if(cont == 13) cont = 0;
 
@@ -120,6 +106,7 @@ int main(){
 		}
 		gotoxy(1, 1); cout << "soy lista bala: " << B.size();
         T.pintar_corazones();
+        //T.setDetener(false);
 		Sleep(50);
 	}
 
@@ -129,7 +116,7 @@ int main(){
 
 
 	return 0;
-}
+}//fin main
 
 template<size_t ROW, size_t COLS>
 void pintarMatrizCaracteres(char (&matriz)[ROW][COLS], int color_n){
@@ -214,7 +201,7 @@ bool colisionEntreBalas(Bala* bala_A, Bala* bala_B){
 
 //funcion que itera listas enemy E, bala B, bala B_enemy y busca colisiones entre estos objetos;
 void colisionesTankesBalas(Tank &tankUser, list<ENEMY*> &tankesEnemi, list<Bala*> &balasUser, list<Bala*> &balasEnemi){
-
+    //busco colision entre objeto bala(user) y objeto Enemi (list)
     for(auto bala: balasUser){
         for(auto enemi: tankesEnemi){
             if(colision(enemi, bala)){
@@ -229,6 +216,7 @@ void colisionesTankesBalas(Tank &tankUser, list<ENEMY*> &tankesEnemi, list<Bala*
             }
         }
     }
+    //busco colision entre objeto tank y objetos bala (list balas enemi)
     for(auto bala: balasEnemi){
         if(colision(&tankUser, bala)){
             tankUser.explotar();
@@ -252,6 +240,8 @@ void colisionesTankesBalas(Tank &tankUser, list<ENEMY*> &tankesEnemi, list<Bala*
             }
         }
     }
+    //busca colision entre objeto tank y objetos enemi (list)
+
 }
 
 
@@ -264,12 +254,26 @@ void moverEnemigos(list<ENEMY*> &enemigos, int cont){
     }
 }
 
+
+//funcion que itera lista B, llama al metodo mover de cada objeto en la lista
+//verifica si objeto bala sale fuera de las coordenadas de matris stage...
+//verifica si los objetos de la lista pisan caracteres 'H' de la matriz stage..
+//elimina ojetos de la lista si se cumplen las condiciones.
 void balasMoverAndFuera(list<Bala*> &balas){
     for(auto bala: balas){
         bala->mover();
         if(bala->fuera() || stage_uno[bala->Y()][bala->X()] == 'H'){
             if(stage_uno[bala->Y()][bala->X()] == 'H'){
-                stage_uno[bala->Y()][bala->X()] = '_';
+                if(bala->getTecla() == 'w' || bala->getTecla() == 's'){
+                    stage_uno[bala->Y()][bala->X()] = '_';
+                    //stage_uno[bala->Y()+1][bala->X()] = '_';
+                    //stage_uno[bala->Y()-1][bala->X()] = '_';
+                }
+                if(bala->getTecla() == 'a' || bala->getTecla() == 'd'){
+                    stage_uno[bala->Y()][bala->X()] = '_';
+                    //stage_uno[bala->Y()][bala->X()] = '_';
+                    //stage_uno[bala->Y()][bala->X()] = '_';
+                }
             }
             bala->borrar();
             delete bala; // Eliminar el objeto Bala de la lista B

@@ -15,6 +15,7 @@ SuperTank::SuperTank(int _x, int _y, int _vida, char _direccion){
     setY(_y);
     setVida(_vida);
     setDireccion(_direccion);
+    setDetener('x');
 }
 //Fata ajustar que no caiga dentro de los obstaculos del mapa.
 void SuperTank::setX(int eje_x){
@@ -37,24 +38,35 @@ void SuperTank::setVida(int _vida){
     }
 }
 
+void SuperTank::setDetener(char valor){
+    if(valor == up || valor == down || valor == left || valor == right){
+        detener = valor;
+    }else{
+        detener = 'x';
+    }
+}
+
 void SuperTank::moverCordenadas(char letra){
 
-    switch(letra){
-    case up:
-        y--;
-        break;
-    case down:
-        y++;
-        break;
-    case left:
-        x--;
-        break;
-    case right:
-        x++;
-        break;
-    default:
-        break;
+    if(letra != getDetener()){
+        switch(letra){
+        case up:
+            y--;
+            break;
+        case down:
+            y++;
+            break;
+        case left:
+            x--;
+            break;
+        case right:
+            x++;
+            break;
+        default:
+            break;
+        }
     }
+    setDetener('x');
 }
 
 void SuperTank::setDireccion(char tecla){

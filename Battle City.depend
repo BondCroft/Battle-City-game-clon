@@ -12,13 +12,13 @@
 	"funciones.h"
 	"stages.h"
 
-1713788877 c:\users\bondcroft\documents\prog c++\battle city\battle city\battlecity.h
+1716173950 c:\users\bondcroft\documents\prog c++\battle city\battle city\battlecity.h
 	<iostream>
 	<vector>
 	<string>
 	"funciones.h"
 
-1713788723 source:c:\users\bondcroft\documents\prog c++\battle city\battle city\main.cpp
+1716174100 source:c:\users\bondcroft\documents\prog c++\battle city\battle city\main.cpp
 	<iostream>
 	<stdio.h>
 	<windows.h>
@@ -32,11 +32,11 @@
 
 1713241404 c:\users\bondcroft\documents\prog c++\battle city\battle city\stages.h
 
-1713482352 source:c:\users\bondcroft\documents\prog c++\battle city\battle city\stages.cpp
+1715642497 source:c:\users\bondcroft\documents\prog c++\battle city\battle city\stages.cpp
 	<iostream>
 	"stages.h"
 
-1713786353 source:c:\users\bondcroft\documents\prog c++\battle city\battle city\supertank.cpp
+1716174296 source:c:\users\bondcroft\documents\prog c++\battle city\battle city\supertank.cpp
 	<string>
 	<windows.h>
 	"BattleCity.h"

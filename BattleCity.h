@@ -10,6 +10,7 @@ class SuperTank{
     int x, y;
     int vida;
     char direccion;
+    char detener;
 
     vector<string>tank_arriba = {
        {"AwC"},
@@ -46,6 +47,9 @@ public:
 
     void setVida(int);
     int getVida(){ return vida; }
+
+    void setDetener(char);
+    char getDetener(){ return detener; }
 
     void moverCordenadas(char);
     void borrar();
@@ -90,6 +94,7 @@ public:
 	Bala(int _x, int _y, char _tecla): x(_x), y(_y), tecla(_tecla){}
 	int X(){ return x; }
 	int Y(){ return y; }
+	char getTecla(){ return tecla; }
 	void borrar();
 	void mover();
 	bool fuera();
